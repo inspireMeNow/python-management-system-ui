@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import QApplication, QMessageBox
 from utils import client_encrypt
 import ssl
 import socket
-from pojo.user import User
+from pojo.login import Login
 import json
 import sys
 
@@ -281,7 +281,7 @@ class Ui_MainWindow(object):
 
     def is_login(self):
         try:
-            user = User()
+            user = Login()
             user.set_args(self.lineEdit_3.text(), client_encrypt.md5(
                 self.lineEdit_4.text()), '', 1)
             host = 'localhost'
@@ -312,7 +312,7 @@ class Ui_MainWindow(object):
 
     def admin_login(self):
         try:
-            user = User()
+            user = Login()
             user.set_args(self.lineEdit.text(), client_encrypt.md5(
                 self.lineEdit_2.text()), '', 0)
             host = 'localhost'
@@ -344,7 +344,7 @@ class Ui_MainWindow(object):
 
     def is_register(self):
         try:
-            user = User()
+            user = Login()
             user.set_args(self.lineEdit_5.text(), client_encrypt.md5(self.lineEdit_6.text()),
                           self.lineEdit_7.text(), 1)
             host = 'localhost'

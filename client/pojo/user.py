@@ -1,50 +1,26 @@
 class User:
-    __id = ''
-    __password = ''
-    __email = ''
-    __idtype = 1
+    __u_code = ''
+    __r_code = ''
+    __u_name = ''
+    __phone = ''
 
-    def __init__(self):
-        pass
+    def get_u_code(self):
+        return self.__u_code
 
-    def set_args(self, username, password, email, idtype):
-        self.__id = username
-        self.__password = password
-        self.__email = email
-        self.__idtype = idtype
+    def get_r_code(self):
+        return self.__r_code
 
-    def get_id(self):
-        return self.__id
+    def get_u_name(self):
+        return self.__u_name
 
-    def get_password(self):
-        return self.__password
+    def get_phone(self):
+        return self.__phone
 
-    def get_email(self):
-        return self.__email
-
-    def get_idtype(self):
-        return self.__idtype
-
-    def print(self):
-        print(self.__id + "\n" + self.__password + "\n" +
-              self.__email + "\n" + f'{self.__idtype}')
-        
-    def set_id(self, id):
-        self.__id = id
-    
-    def set_password(self, password):
-        self.__password = password
-
-    def set_email(self, email):
-        self.__email = email
-    
-    def set_idtype(self, idtype):
-        self.__idtype = idtype
+    def set_args(self, u_code, r_code, u_name, phone):
+        self.__u_code = u_code
+        self.__r_code = r_code
+        self.__u_name = u_name
+        self.__phone = phone
 
     def to_json(self):
-        return {
-            "id": self.__id,
-            "password": self.__password,
-            "email": self.__email,
-            "idtype": self.__idtype
-        }
+        return {'u_code': self.__u_code, 'r_code': self.__r_code, 'u_name': self.__u_name, 'phone': self.__phone}

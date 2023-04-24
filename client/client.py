@@ -18,6 +18,6 @@ if __name__ == "__main__":
     admin_window = QtWidgets.QDialog()
     admin = Ui_admin_window(admin_window)
     MainWindow = QtWidgets.QMainWindow()
-    main = Ui_MainWindow(MainWindow,admin_window)
+    main = Ui_MainWindow(MainWindow, admin_window)
     MainWindow.show()
     sys.exit(app.exec())

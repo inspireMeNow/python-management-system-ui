@@ -8,6 +8,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMessageBox, QCheckBox, QItemDelegate, QPushButton
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from utils import client_encrypt
+from pojo.login import Login
 from pojo.user import User
 import socket
 
@@ -137,6 +138,7 @@ class Ui_admin_window(object):
                         QtCore.QRect(170, 100, 42, 20))
                     self.toolButton_6.setObjectName("toolButton_6")
                     self.toolButton_6.setText(_translate("part_window", "删除"))
+                    self.toolButton_4.clicked.connect(self.find_all_user_info)
 
                 case 1:
                     self.page = QtWidgets.QWidget()
@@ -297,6 +299,7 @@ class Ui_admin_window(object):
                         QtCore.QRect(170, 100, 42, 20))
                     self.toolButton_6.setObjectName("toolButton_6")
                     self.toolButton_6.setText(_translate("part_window", "删除"))
+                    self.toolButton_4.clicked.connect(self.find_all_pa_table)
 
                 case 4:
                     self.page = QtWidgets.QWidget()
@@ -349,6 +352,7 @@ class Ui_admin_window(object):
                         QtCore.QRect(170, 100, 42, 20))
                     self.toolButton_6.setObjectName("toolButton_6")
                     self.toolButton_6.setText(_translate("part_window", "删除"))
+                    self.toolButton_4.clicked.connect(self.find_all_part)
 
                 case 5:
                     self.page = QtWidgets.QWidget()
@@ -507,7 +511,7 @@ class Ui_admin_window(object):
                         QtCore.QRect(170, 100, 42, 20))
                     self.toolButton_6.setObjectName("toolButton_6")
                     self.toolButton_6.setText(_translate("part_window", "删除"))
-                    self.toolButton_4.clicked.connect(self.find_all_in_order)
+                    self.toolButton_4.clicked.connect(self.find_all_out_order)
 
                 case _:
                     self.page = QtWidgets.QWidget()
@@ -593,7 +597,7 @@ class Ui_admin_window(object):
             return
 
     def insert_user(self):
-        user = User()
+        user = Login()
         user.set_args('y000004', client_encrypt.md5(
             'y000004'), 'casad@123.com', 1)
         choose = QStandardItem()
@@ -701,11 +705,124 @@ class Ui_admin_window(object):
         self.tableView_6.setModel(self.model)
         self.tableView_6.update()
 
+    def find_all_out_order(self):
+        send_data = {'key': 'find_all_out_order', 'value': ''}
+        data = self.send_to_server(send_data)
+        self.model_7 = QStandardItemModel()
+        i = 0
+        new_data = list(json.loads(json.dumps(
+            data, ensure_ascii=False)).values())
+        self.model_7.setHorizontalHeaderLabels(
+            ['选择', '订单编号', '配件号', '数量', '出库时间', '仓库号', '处理人工号', ])
+        self.choose_7 = [QStandardItem()
+                         for i in range(len(new_data))]
+        while i < len(new_data):
+            self.choose_7[i].setCheckable(True)
+            self.choose_7[i].setCheckState(Qt.CheckState.Unchecked)
+            self.choose_7[i].setEditable = False
+            items = [self.choose_7[i], QStandardItem(new_data[i]['out_code']),
+                     QStandardItem(new_data[i]['p_code']),
+                     QStandardItem(str(new_data[i]['num'])), QStandardItem(
+                new_data[i]['out_time']),
+                QStandardItem(new_data[i]['r_code']),
+                QStandardItem(new_data[i]['u_code'])]
+            i += 1
+            self.model_7.appendRow(items)
+        # for x in new_data:
+        #     print(str(x.keys()) + '\n'+str(x.values()))
+
+        # print(new_data[0])
+        # for row in new_data:
+
+        self.tableView_7.setModel(self.model_7)
+        self.tableView_7.update()
+
     def on_state_changed(self, state):
         if (state == QtCore.Qt.CheckState.Checked):
             return 1
         else:
             return 0
+
+    def find_all_pa_table(self):
+        self.model_3 = QStandardItemModel()
+        send_data = {"key": "select_all_pa_table", "value": ""}
+        data = self.send_to_server(send_data)
+        # self.model_3 = QStandardItemModel()
+        i = 0
+        new_data = list(json.loads(json.dumps(
+            data, ensure_ascii=False)).values())
+        self.model_3.setHorizontalHeaderLabels(
+            ['选择', '货架号', '货架类型', '货架容量', ])
+        self.choose_3 = [QStandardItem()
+                         for i in range(len(new_data))]
+        while i < len(new_data):
+            self.choose_3[i].setCheckable(True)
+            self.choose_3[i].setCheckState(Qt.CheckState.Unchecked)
+            self.choose_3[i].setEditable = False
+            items = [self.choose_3[i], QStandardItem(new_data[i]['s_code']),
+                     QStandardItem(new_data[i]['s_type']),
+                     QStandardItem(str(new_data[i]['num']))]
+            i += 1
+            self.model_3.appendRow(items)
+
+        self.tableView_3.setModel(self.model_3)
+        self.tableView_3.update()
+
+    def find_all_part(self):
+        self.model_4 = QStandardItemModel()
+        send_data = {"key": "find_all_part", "value": ""}
+        data = self.send_to_server(send_data)
+        # self.model_3 = QStandardItemModel()
+        i = 0
+        new_data = list(json.loads(json.dumps(
+            data, ensure_ascii=False)).values())
+        self.model_4.setHorizontalHeaderLabels(
+            ['选择', '产品号', '产品名称', '产品类型', '生产商', '生产日期', '保修期', '规格', '详细信息'])
+        self.choose_4 = [QStandardItem()
+                         for i in range(len(new_data))]
+        while i < len(new_data):
+            self.choose_4[i].setCheckable(True)
+            self.choose_4[i].setCheckState(Qt.CheckState.Unchecked)
+            self.choose_4[i].setEditable = False
+            items = [self.choose_4[i], QStandardItem(new_data[i]['p_code']),
+                     QStandardItem(new_data[i]['p_name']),
+                     QStandardItem(str(new_data[i]['p_type'])),
+                     QStandardItem(str(new_data[i]['manufacture'])),
+                     QStandardItem(str(new_data[i]['protime'])),
+                     QStandardItem(str(new_data[i]['warranty_time'])),
+                     QStandardItem(str(new_data[i]['size'])),
+                     QStandardItem(str(new_data[i]['info']))]
+            i += 1
+            self.model_4.appendRow(items)
+
+        self.tableView_4.setModel(self.model_4)
+        self.tableView_4.update()
+
+    def find_all_user_info(self):
+        self.model_0 = QStandardItemModel()
+        send_data = {"key": "find_all_user_info", "value": ""}
+        data = self.send_to_server(send_data)
+        # self.model_3 = QStandardItemModel()
+        i = 0
+        new_data = list(json.loads(json.dumps(
+            data, ensure_ascii=False)).values())
+        self.model_0.setHorizontalHeaderLabels(
+            ['选择', '工号', '姓名', '联系电话', '所负责仓库'])
+        self.choose_0 = [QStandardItem()
+                         for i in range(len(new_data))]
+        while i < len(new_data):
+            self.choose_0[i].setCheckable(True)
+            self.choose_0[i].setCheckState(Qt.CheckState.Unchecked)
+            self.choose_0[i].setEditable = False
+            items = [self.choose_0[i], QStandardItem(new_data[i]['u_code']),
+                     QStandardItem(new_data[i]['r_code']),
+                     QStandardItem(str(new_data[i]['u_name'])),
+                     QStandardItem(str(new_data[i]['phone']))]
+            i += 1
+            self.model_0.appendRow(items)
+
+        self.tableView_0.setModel(self.model_0)
+        self.tableView_0.update()
 
 
 class CheckBoxDelegate(QItemDelegate):
